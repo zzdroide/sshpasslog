@@ -1,4 +1,5 @@
 import socketserver
+import threading
 
 import paramiko
 
@@ -53,6 +54,9 @@ class MyTransport(paramiko.Transport):
 
 
 class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
+    NEG_TIMEOUT = 15
+    AUTH_TIMEOUT = 30
+
     client_ip_addr: str
     client_ip_country: str
 
@@ -68,9 +72,15 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
     def handle(self):
         try:
-            self.transport.start_server(server=self.my_server)
-            chan = self.transport.accept(30)
+            event = threading.Event()
+            self.transport.start_server(event=event, server=self.my_server)
+            negotiated = event.wait(ReqHandler.NEG_TIMEOUT)
+            if not negotiated:
+                return
+
+            chan = self.transport.accept(ReqHandler.AUTH_TIMEOUT)
             assert chan is None     # Client can't open a channel without authenticating
+
         except (OSError, EOFError):
             pass
 
