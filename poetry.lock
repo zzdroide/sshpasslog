@@ -43,6 +43,14 @@ test = ["pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "ip3country"
+version = "0.2.0"
+description = "A zero-dependency, local, fast, tiny ip-address to country lookup"
+category = "main"
+optional = false
+python-versions = ">=2.0"
+
+[[package]]
 name = "paramiko"
 version = "3.2.0"
 description = "SSH2 protocol library"
@@ -97,7 +105,7 @@ cryptography = ">=37.0.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.11"
-content-hash = "6a00f72bcb10e2a37878e6ff0914a53769f942e683e943b4d3add1118fe2f0c4"
+content-hash = "9151ce0e21bda519f303cf273ec36128914339f3249c9cff3534173dbc724259"
 
 [metadata.files]
 bcrypt = [
@@ -213,6 +221,9 @@ cryptography = [
     {file = "cryptography-41.0.2-pp39-pypy39_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:9a6673c1828db6270b76b22cc696f40cde9043eb90373da5c2f8f2158957f42f"},
     {file = "cryptography-41.0.2-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:342f3767e25876751e14f8459ad85e77e660537ca0a066e10e75df9c9e9099f0"},
     {file = "cryptography-41.0.2.tar.gz", hash = "sha256:7d230bf856164de164ecb615ccc14c7fc6de6906ddd5b491f3af90d3514c925c"},
+]
+ip3country = [
+    {file = "ip3country-0.2.0.tar.gz", hash = "sha256:36bda305556e1cd0a687f2c3859886f84d37da2f9450dc2d6bcc39837b754776"},
 ]
 paramiko = [
     {file = "paramiko-3.2.0-py3-none-any.whl", hash = "sha256:df0f9dd8903bc50f2e10580af687f3015bf592a377cd438d2ec9546467a14eb8"},

@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "~3.11"
 paramiko = "^3.2.0"
+ip3country = "^0.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

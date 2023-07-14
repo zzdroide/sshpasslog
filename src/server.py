@@ -1,13 +1,19 @@
-from dataclasses import dataclass
 import socketserver
 
 import paramiko
 
+from .country import ip2country
 from .logger import LoggingMixin
 
-@dataclass
+
 class MyServer(paramiko.ServerInterface, LoggingMixin):
-    client_ip: str
+    client_ip_addr: str
+    client_ip_country: str
+
+    def __init__(self, src: 'ReqHandler'):
+        self.client_ip_addr = src.client_ip_addr
+        self.client_ip_country = src.client_ip_country
+
     username_printed = False
 
     def get_banner(self):
@@ -47,14 +53,17 @@ class MyTransport(paramiko.Transport):
 
 
 class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
-    client_ip: str
+    client_ip_addr: str
+    client_ip_country: str
+
     my_server: MyServer
     transport: MyTransport
 
     def setup(self):
-        self.client_ip = self.client_address[0]
+        self.client_ip_addr = self.client_address[0]
+        self.client_ip_country = ip2country(self.client_ip_addr)
         self.log('conn')
-        self.my_server = MyServer(self.client_ip)
+        self.my_server = MyServer(self)
         self.transport = MyTransport(self.request)
 
     def handle(self):
