@@ -72,6 +72,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
 PORT = 2222
 
-with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:
-    print(f"Listening on port {PORT}")
-    server.serve_forever()
+def run_server():
+    with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:
+        print(f"Listening on port {PORT}")
+        server.serve_forever()
