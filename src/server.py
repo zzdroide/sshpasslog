@@ -3,8 +3,10 @@ import socketserver
 
 import paramiko
 
+from .logger import LoggingMixin
+
 @dataclass
-class MyServer(paramiko.ServerInterface):
+class MyServer(paramiko.ServerInterface, LoggingMixin):
     client_ip: str
     username_printed = False
 
@@ -14,18 +16,18 @@ class MyServer(paramiko.ServerInterface):
 
     def get_allowed_auths(self, username):
         if not self.username_printed:
-            print(f"{self.client_ip}\tuser\t{username}")
+            self.log('user', username)
             self.username_printed = True
 
         return "password,publickey"
 
     def check_auth_password(self, username, password):
-        print(f"{self.client_ip}\tpass\t{username}:{password}")
+        self.log('pass', f'{username}:{password}')
         # TODO: save
         return paramiko.AUTH_FAILED
 
     def check_auth_publickey(self, username, key):
-        print(f"{self.client_ip}\tpub\t{username}:{key.fingerprint}")
+        self.log('pub', f'{username} {key.fingerprint}')
         return paramiko.AUTH_FAILED
 
     def check_channel_request(self, kind, chanid):
@@ -44,14 +46,14 @@ class MyTransport(paramiko.Transport):
         self.add_server_key(MyTransport.host_key)
 
 
-class ReqHandler(socketserver.BaseRequestHandler):
+class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
     client_ip: str
     my_server: MyServer
     transport: MyTransport
 
     def setup(self):
         self.client_ip = self.client_address[0]
-        print(f"{self.client_ip}\tconnected")
+        self.log('conn')
         self.my_server = MyServer(self.client_ip)
         self.transport = MyTransport(self.request)
 
@@ -65,7 +67,7 @@ class ReqHandler(socketserver.BaseRequestHandler):
 
     def finish(self):
         self.transport.close()
-        print(f"{self.client_ip}\tdisconnected")
+        self.log('disc')
 
 
 PORT = 2222
