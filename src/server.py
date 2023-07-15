@@ -4,6 +4,7 @@ import threading
 import paramiko
 
 from .country import Country
+from . import db
 from .logger import LoggingMixin
 
 country = Country()
@@ -32,7 +33,7 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
     def check_auth_password(self, username, password):
         self.log('pass', f'{username}:{password}')
-        # TODO: save
+        db.record_pass(username, password, self.client_ip_addr, self.client_ip_country)
         return paramiko.AUTH_FAILED
 
     def check_auth_publickey(self, username, key):

@@ -13,3 +13,4 @@ services:
     network_mode: host  # Otherwise client_ip is 172.x.x.x
     volumes:
       - ./src/:/app/src/
+      - ./db/:/app/db/
