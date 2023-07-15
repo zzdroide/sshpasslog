@@ -3,11 +3,13 @@ import threading
 
 import paramiko
 
+from .apt_package import AptPackage
 from .country import Country
 from . import db
 from .logger import LoggingMixin
 
 country = Country()
+apt_package = AptPackage()
 
 
 class MyServer(paramiko.ServerInterface, LoggingMixin):
@@ -50,9 +52,8 @@ class MyTransport(paramiko.Transport):
     host_key = paramiko.RSAKey.generate(bits=2048)
 
     def __init__(self, *args, **kwargs):
-        # TODO: get latest version automatically from https://pypi.org/project/apt-repo/
-        self._CLIENT_ID = "OpenSSH_8.2p1 Ubuntu-4ubuntu0.7"
         super().__init__(*args, **kwargs)
+        self.local_version = apt_package.version
         self.add_server_key(MyTransport.host_key)
 
 
