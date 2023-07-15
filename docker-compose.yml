@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: app
+      args:
+        HOST_UID: ${HOST_UID:?err}
+        HOST_GID: ${HOST_GID:?err}
+    init: true
+    restart: unless-stopped
+    network_mode: host  # Otherwise client_ip is 172.x.x.x
+    volumes:
+      - ./src/:/app/src/
