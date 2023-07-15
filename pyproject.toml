@@ -9,10 +9,12 @@ readme = "README.md"
 python = "~3.11"
 paramiko = "^3.2.0"
 ip3country = "^0.2.0"
+requests = "^2.31.0"
 
 
 [tool.poetry.group.dev.dependencies]
 types-paramiko = "^3.2.0.0"
+types-requests = "^2.31.0.1"
 
 [build-system]
 requires = ["poetry-core"]

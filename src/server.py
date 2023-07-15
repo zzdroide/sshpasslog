@@ -3,8 +3,10 @@ import threading
 
 import paramiko
 
-from .country import ip2country
+from .country import Country
 from .logger import LoggingMixin
+
+country = Country()
 
 
 class MyServer(paramiko.ServerInterface, LoggingMixin):
@@ -65,7 +67,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
     def setup(self):
         self.client_ip_addr = self.client_address[0]
-        self.client_ip_country = ip2country(self.client_ip_addr)
+        self.client_ip_country = country.ip2country(self.client_ip_addr)
         self.log('conn')
         self.my_server = MyServer(self)
         self.transport = MyTransport(self.request)
