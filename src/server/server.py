@@ -3,13 +3,10 @@ import threading
 
 import paramiko
 
-from .apt_package import AptPackage
-from .country import Country
-from . import db
-from .logger import LoggingMixin
-
-country = Country()
-apt_package = AptPackage()
+from src import apt_package
+from src.country import ip2country
+from src import db
+from src.logger import LoggingMixin
 
 
 class MyServer(paramiko.ServerInterface, LoggingMixin):
@@ -53,7 +50,7 @@ class MyTransport(paramiko.Transport):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.local_version = apt_package.version
+        self.local_version = apt_package.get_updated_ssh_version()
         self.add_server_key(MyTransport.host_key)
 
 
@@ -69,7 +66,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
     def setup(self):
         self.client_ip_addr = self.client_address[0]
-        self.client_ip_country = country.ip2country(self.client_ip_addr)
+        self.client_ip_country = ip2country(self.client_ip_addr)
         self.log('conn')
         self.my_server = MyServer(self)
         self.transport = MyTransport(self.request)
@@ -95,7 +92,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
 PORT = 2222
 
-def run_server():
+def run():
     with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:
         print(f"Listening on port {PORT}")
         server.serve_forever()

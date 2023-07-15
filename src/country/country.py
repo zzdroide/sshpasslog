@@ -7,11 +7,6 @@ import requests
 
 
 class Country(threading.Thread):
-    """
-    A class to obtain the country from an IP, with the `ip2country` method.
-
-    Create one instance only, as it starts a thread to periodically update data.
-    """
 
     lookup = CountryLookup()
     tor_ips: set[str] = set()
@@ -46,3 +41,9 @@ class Country(threading.Thread):
         local_tor_ips = frozenset(r.text.strip().split('\n'))
         self.tor_ips = local_tor_ips
         print(f'Updated tor_ips with {len(local_tor_ips)} IPs')
+
+
+country = Country() # Singleton
+
+def ip2country(ip: str):
+    return country.ip2country(ip)

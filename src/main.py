@@ -1,3 +1,3 @@
-from .server import run_server
+from src import server
 
-run_server()
+server.run()
