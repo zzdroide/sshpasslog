@@ -30,6 +30,8 @@ class AptPackage(threading.Thread):
 
     def refresh_version(self):
         self.version = self.get_updated_version()
+        # This is the only method that writes to self.version,
+        # so reads should be thread-safe.
         print(f'Updated apt_package.version to {self.version}')
 
     def get_updated_version(self):
@@ -45,13 +47,25 @@ class AptPackage(threading.Thread):
         url = 'https://mirrors.edge.kernel.org/ubuntu'
         dist = f'{UBUNTU_DISTRO}-updates'
         components = ('main',)
-        repo = APTRepository(url, dist, components)
-        package = repo.get_packages_by_name('openssh-server')[0]
-        debian_revision: str = package.version.split('-')[-1]
-        return debian_revision
+
+        try:
+            repo = APTRepository(url, dist, components)
+            package = repo.get_packages_by_name('openssh-server')[0]
+            debian_revision: str = package.version.split('-')[-1]
+            return debian_revision
+        except Exception:
+            # Probably a network error,
+            # but the apt_repo package instead of rasing just returns None somewhere.
+            raise RuntimeError("Failed to obtain version, can't start ssh server without it.")
+            # This is the main thread so the whole program will crash.
+            # docker-compose will restart the container and retry first very quickly,
+            # and then every 1min.
 
 
 apt_package = AptPackage()  # Singleton
 
 def get_updated_ssh_version():
-    return apt_package.version
+    # Thread-safe read
+    local_version = apt_package.version
+    assert local_version is not None
+    return local_version
