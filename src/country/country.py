@@ -38,9 +38,10 @@ class Country(threading.Thread):
         r = requests.get('https://check.torproject.org/torbulkexitlist')
         r.raise_for_status()
         # Blindly trust that the format is correct:
-        local_tor_ips = frozenset(r.text.strip().split('\n'))
-        self.tor_ips = local_tor_ips
-        print(f'Updated tor_ips with {len(local_tor_ips)} IPs')
+        self.tor_ips = frozenset(r.text.strip().split('\n'))
+        # This is the only method that writes to self.tor_ips,
+        # so reads should be thread-safe.
+        print(f'Updated tor_ips with {len(self.tor_ips)} IPs')
 
 
 country = Country() # Singleton
