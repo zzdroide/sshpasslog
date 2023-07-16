@@ -1,3 +1,4 @@
+import logging
 import socketserver
 import threading
 
@@ -50,8 +51,12 @@ class MyTransport(paramiko.Transport):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.local_version = apt_package.get_updated_ssh_version()
         self.add_server_key(MyTransport.host_key)
+
+        # Stack traces of clients timing out are just spam, so discard ERROR level logs:
+        self.logger.setLevel(logging.CRITICAL)
 
 
 class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
