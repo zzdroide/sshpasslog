@@ -45,7 +45,7 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
 
 class MyTransport(paramiko.Transport):
-    # @static
+    # static: (don't generate a new key on each connection)
     host_key = paramiko.RSAKey.generate(bits=2048)
 
     def __init__(self, *args, **kwargs):
