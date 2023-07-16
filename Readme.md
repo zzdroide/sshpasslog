@@ -1,4 +1,6 @@
-Run with: `python -m src.main`
+Run with: `DEV=1 python -m src.main`
+
+Remember that there's no autoreload, the server has to be stopped with ctrl-c and run again for changes to take effect.
 
 And test with:
 
