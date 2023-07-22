@@ -6,7 +6,7 @@ Remember that there's no autoreload, the server has to be stopped with ctrl-c an
 
 And test with:
 
-ssh -p2222 -v -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=`yes/no/ask` -o PubkeyAuthentication=`yes/no` nouser1@localhost
+ssh -p2222 -v -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=`yes/no/ask` -o PubkeyAuthentication=`yes/no` nouser1@localhost
 
 
 designed for ipv4 only
