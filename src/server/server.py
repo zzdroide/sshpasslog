@@ -9,6 +9,8 @@ from src.country import ip2country
 from src import db
 from src.logger import LoggingMixin
 
+VERSION_STR_PREFIX_LEN = len('SSH-2.0-')
+
 
 class MyServer(paramiko.ServerInterface, LoggingMixin):
     client_ip_addr: str
@@ -94,6 +96,11 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
             event = threading.Event()
             self.transport.start_server(event=event, server=self.my_server)
             negotiated = event.wait(ReqHandler.NEG_TIMEOUT)
+
+            if self.transport.remote_version:
+                client_ver = self.transport.remote_version[VERSION_STR_PREFIX_LEN:]
+                self.log('cli', client_ver)
+
             if not negotiated:
                 return
 
