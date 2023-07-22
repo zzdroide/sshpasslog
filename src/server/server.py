@@ -7,7 +7,7 @@ import paramiko
 from src import apt_package
 from src.country import ip2country
 from src import db
-from src.logger import LoggingMixin
+from src.log import logger, LoggingMixin
 
 VERSION_STR_PREFIX_LEN = len('SSH-2.0-')
 
@@ -119,5 +119,5 @@ PORT = 2222
 
 def run():
     with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:
-        print(f"Listening on port {PORT}")
+        logger.info(f"Listening on port {PORT}")
         server.serve_forever()

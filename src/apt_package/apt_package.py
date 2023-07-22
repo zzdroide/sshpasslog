@@ -4,6 +4,7 @@ import time
 import traceback
 
 from apt_repo import APTRepository  # type: ignore
+from src.log import logger
 
 
 UBUNTU_DISTRO = 'focal'
@@ -32,7 +33,7 @@ class AptPackage(threading.Thread):
         self.version = self.get_updated_version()
         # This is the only method that writes to self.version,
         # so reads should be thread-safe.
-        print(f'Updated apt_package.version to {self.version}')
+        logger.info(f'Updated apt_package.version to {self.version}')
 
     def get_updated_version(self):
         base_version_components = INITIAL_DISTRO_SSH_VERSION.split('-')[:-1]
