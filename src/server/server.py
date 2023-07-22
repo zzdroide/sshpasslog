@@ -7,7 +7,7 @@ import paramiko
 from src import apt_package
 from src.country import ip2country
 from src import db
-from src.log import logger, LoggingMixin
+from src.log import logger, LoggingMixin, log_exceptions
 
 VERSION_STR_PREFIX_LEN = len('SSH-2.0-')
 
@@ -24,6 +24,7 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
         self.username_printed = False
 
+    @log_exceptions()
     def get_banner(self):
         # return ("\ndo not type your password here\n\n", "en-US")
         return ("\n  ಠ_ಠ\n\n", "en-US")
@@ -36,25 +37,30 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
             self.log('user', username)
             self.username_printed = True
 
+    @log_exceptions()
     def get_allowed_auths(self, username):
         self.on_got_username(username)
         return "password,publickey"
 
+    @log_exceptions()
     def check_auth_none(self, username):
         self.on_got_username(username)
         return paramiko.AUTH_FAILED
 
+    @log_exceptions()
     def check_auth_password(self, username, password):
         self.log('pass', f'{username}:{password}')
         self.username_printed = True
         db.record_pass(username, password, self.client_ip_addr, self.client_ip_country)
         return paramiko.AUTH_FAILED
 
+    @log_exceptions()
     def check_auth_publickey(self, username, key):
         self.log('pub', f'{username} {key.fingerprint}')
         self.username_printed = True
         return paramiko.AUTH_FAILED
 
+    @log_exceptions()
     def check_channel_request(self, kind, chanid):
         # Client can't open a channel without authenticating
         raise AssertionError("never reached")
