@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 import socketserver
 import threading
 
@@ -67,17 +68,34 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
 
 class MyTransport(paramiko.Transport):
-    # static: (don't generate a new key on each connection)
-    host_key = paramiko.RSAKey.generate(bits=2048)
+    server_keys = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.local_version = apt_package.get_updated_ssh_version()
-        self.add_server_key(MyTransport.host_key)
+        self.set_host_keys()
 
         # Stack traces of clients timing out are just spam, so discard ERROR level logs:
         self.logger.setLevel(logging.CRITICAL)
+
+    def set_host_keys(self):
+        # Cache:
+        if MyTransport.server_keys is None:
+            # Load them, once. Paramiko's idea was to execute this on every new request??
+            # (On multiple simultaneous first connections, for example by running "ssh-keyscan -p2222 localhost",
+            # this will run more than once. But who cares.)
+            base_dir = Path('host_keys/etc/ssh/')
+            keys = (
+                paramiko.RSAKey.from_private_key_file(base_dir / 'ssh_host_rsa_key'),
+                paramiko.ECDSAKey.from_private_key_file(base_dir / 'ssh_host_ecdsa_key'),
+                paramiko.Ed25519Key.from_private_key_file(base_dir / 'ssh_host_ed25519_key'),
+            )
+            for k in keys:
+                self.add_server_key(k)
+            MyTransport.server_keys = self.server_key_dict
+
+        self.server_key_dict = MyTransport.server_keys
 
 
 class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
