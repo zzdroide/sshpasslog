@@ -95,17 +95,13 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
         try:
             event = threading.Event()
             self.transport.start_server(event=event, server=self.my_server)
-            negotiated = event.wait(ReqHandler.NEG_TIMEOUT)
+            event.wait(ReqHandler.NEG_TIMEOUT)
 
             if self.transport.remote_version:
                 client_ver = self.transport.remote_version[VERSION_STR_PREFIX_LEN:]
                 self.log('cli', client_ver)
 
-            if not negotiated:
-                return
-
-            chan = self.transport.accept(ReqHandler.AUTH_TIMEOUT)
-            assert chan is None     # Client can't open a channel without authenticating
+            self.transport.join(ReqHandler.AUTH_TIMEOUT)
 
         except (OSError, EOFError):
             pass
