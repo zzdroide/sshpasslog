@@ -10,7 +10,6 @@ whoami_server = {
     "key": "whoami.filippo.io ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYBzfSibeNCydOnOYXdIBB9e3F1guVbwnbQQ9BdtkmH",
 }
 
-# logging_level = logging.DEBUG
 logging_level = logging.INFO
 
 username="user"

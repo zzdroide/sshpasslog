@@ -26,7 +26,6 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
     @log_exceptions()
     def get_banner(self):
-        # return ("\ndo not type your password here\n\n", "en-US")
         return ("\n  ಠ_ಠ\n\n", "en-US")
 
     def on_got_username(self, username: str):
