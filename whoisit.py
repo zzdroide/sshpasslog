@@ -113,4 +113,4 @@ def get_github(res):
 
 setup_logger()
 res = do_ssh()
-print(get_github(res))
+print(get_github(res))  # noqa: T201
