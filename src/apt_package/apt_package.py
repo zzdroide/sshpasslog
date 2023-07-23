@@ -54,10 +54,10 @@ class AptPackage(threading.Thread):
             package = repo.get_packages_by_name('openssh-server')[0]
             debian_revision: str = package.version.split('-')[-1]
             return debian_revision
-        except Exception:
+        except Exception as e:
             # Probably a network error,
             # but the apt_repo package instead of rasing just returns None somewhere.
-            raise RuntimeError("Failed to obtain version, can't start ssh server without it.")
+            raise RuntimeError("Failed to obtain version, can't start ssh server without it.") from e
             # This is the main thread so the whole program will crash.
             # docker-compose will restart the container and retry first very quickly,
             # and then every 1min.
