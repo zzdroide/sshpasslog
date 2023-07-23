@@ -1,3 +1,3 @@
-from .log import logger, LoggingMixin, log_exceptions
+from .log import LoggingMixin, log_exceptions, logger
 
 __all__ = ['logger', 'LoggingMixin', 'log_exceptions']

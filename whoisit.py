@@ -1,8 +1,8 @@
-from base64 import b64decode
 import logging
-import paramiko
 import re
+from base64 import b64decode
 
+import paramiko
 
 whoami_server = {
     'host': 'whoami.filippo.io',

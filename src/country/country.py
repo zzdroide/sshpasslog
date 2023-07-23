@@ -2,8 +2,8 @@ import threading
 import time
 import traceback
 
-from ip3country import CountryLookup    # type: ignore
 import requests
+from ip3country import CountryLookup  # type: ignore
 
 from src.log import logger
 

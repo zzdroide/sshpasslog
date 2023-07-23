@@ -1,14 +1,13 @@
 import logging
-from pathlib import Path
 import socketserver
 import threading
+from pathlib import Path
 
 import paramiko
 
-from src import apt_package
+from src import apt_package, db
 from src.country import ip2country
-from src import db
-from src.log import logger, LoggingMixin, log_exceptions
+from src.log import LoggingMixin, log_exceptions, logger
 
 VERSION_STR_PREFIX_LEN = len('SSH-2.0-')
 

@@ -4,8 +4,8 @@ import time
 import traceback
 
 from apt_repo import APTRepository  # type: ignore
-from src.log import logger
 
+from src.log import logger
 
 UBUNTU_DISTRO = 'focal'
 INITIAL_DISTRO_SSH_VERSION = 'SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3'
