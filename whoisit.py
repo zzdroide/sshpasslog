@@ -42,8 +42,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
         # But it's not implemented for publickey:
         if self.auth_method == "publickey":
             return self._parse_userauth_pk_ok(m)
-        else:
-            return super()._parse_userauth_info_request(m)
+        return super()._parse_userauth_info_request(m)
 
     def _parse_userauth_pk_ok(self, m):
         msg = (
