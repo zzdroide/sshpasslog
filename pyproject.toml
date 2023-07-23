@@ -16,7 +16,12 @@ apt-repo = "^0.5"
 [tool.poetry.group.dev.dependencies]
 types-paramiko = "==3.2.0.0"
 types-requests = "^2.31.0.1"
+ruff = "^0.0.280"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+select = ["F", "E", "W", "C90"]
+ignore = ["E501"]
