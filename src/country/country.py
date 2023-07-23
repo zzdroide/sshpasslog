@@ -11,10 +11,11 @@ from src.log import logger
 class Country(threading.Thread):
 
     lookup = CountryLookup()
-    tor_ips: set[str] = set()
+    tor_ips: set[str]
 
     def __init__(self):
         super().__init__(daemon=True)
+        self.tor_ips = set()
         self.start()
 
     def ip2country(self, ip: str):

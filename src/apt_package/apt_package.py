@@ -37,7 +37,8 @@ class AptPackage(threading.Thread):
 
     def get_updated_version(self):
         base_version_components = INITIAL_DISTRO_SSH_VERSION.split("-")[:-1]
-        return "-".join(base_version_components + [self.get_updated_revision()])
+        version_components = (*base_version_components, self.get_updated_revision())
+        return "-".join(version_components)
 
     def get_updated_revision(self):
         if os.environ.get("DEV") == "1":
