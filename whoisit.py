@@ -36,8 +36,9 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
 
     def _parse_userauth_info_request(self, m):
         # This method is actually _parse_60
-        assert paramiko.common.MSG_USERAUTH_INFO_REQUEST == 60
-        assert paramiko.common.MSG_USERAUTH_PK_OK == 60
+        if __debug__:
+            assert paramiko.common.MSG_USERAUTH_INFO_REQUEST == 60  # noqa: S101
+            assert paramiko.common.MSG_USERAUTH_PK_OK == 60         # noqa: S101
         # But it's not implemented for publickey:
         if self.auth_method == 'publickey':
             return self._parse_userauth_pk_ok(m)

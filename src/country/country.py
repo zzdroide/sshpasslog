@@ -37,7 +37,7 @@ class Country(threading.Thread):
             time.sleep(6 * 60 * 60)     # 6h
 
     def refresh_tor_ips(self):
-        r = requests.get('https://check.torproject.org/torbulkexitlist')
+        r = requests.get('https://check.torproject.org/torbulkexitlist', timeout=30)
         r.raise_for_status()
         # Blindly trust that the format is correct:
         self.tor_ips = frozenset(r.text.strip().split('\n'))

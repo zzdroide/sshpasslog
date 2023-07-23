@@ -68,5 +68,7 @@ apt_package = AptPackage()  # Singleton
 def get_updated_ssh_version():
     # Thread-safe read
     local_version = apt_package.version
-    assert local_version is not None
-    return local_version
+    if local_version:
+        return local_version
+    else:
+        raise RuntimeError('Empty updated_ssh_version')

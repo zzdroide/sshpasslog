@@ -135,6 +135,6 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 PORT = 2222
 
 def run():
-    with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:
+    with socketserver.ThreadingTCPServer(('0.0.0.0', PORT), ReqHandler) as server:  # noqa: S104
         logger.info(f"Listening on port {PORT}")
         server.serve_forever()
