@@ -31,7 +31,7 @@ ON CONFLICT (user, pass) DO UPDATE SET
 """
 
 con = sqlite3.connect(
-    './db/sshpassslog.sqlite3',
+    "./db/sshpassslog.sqlite3",
     check_same_thread=False,
     # autocommit=True,      future, python3.12
     isolation_level=None,

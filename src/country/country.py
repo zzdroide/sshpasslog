@@ -23,10 +23,10 @@ class Country(threading.Thread):
         local_tor_ips = self.tor_ips
 
         if ip in local_tor_ips:
-            return 'XT'
+            return "XT"
             # XT code is available for custom purposes (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#XT)
 
-        return self.lookup.lookupStr(ip) or '--'
+        return self.lookup.lookupStr(ip) or "--"
 
     def run(self):
         while True:
@@ -37,13 +37,13 @@ class Country(threading.Thread):
             time.sleep(6 * 60 * 60)     # 6h
 
     def refresh_tor_ips(self):
-        r = requests.get('https://check.torproject.org/torbulkexitlist', timeout=30)
+        r = requests.get("https://check.torproject.org/torbulkexitlist", timeout=30)
         r.raise_for_status()
         # Blindly trust that the format is correct:
-        self.tor_ips = frozenset(r.text.strip().split('\n'))
+        self.tor_ips = frozenset(r.text.strip().split("\n"))
         # This is the only method that writes to self.tor_ips,
         # so reads should be thread-safe.
-        logger.info(f'Updated tor_ips with {len(self.tor_ips)} IPs')
+        logger.info(f"Updated tor_ips with {len(self.tor_ips)} IPs")
 
 
 country = Country() # Singleton
