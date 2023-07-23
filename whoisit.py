@@ -77,7 +77,7 @@ def setup_logger():
 
 def add_host_key_entry(client):
     entry = paramiko.hostkeys.HostKeyEntry.from_line(whoami_server["key"])
-    client.get_host_keys()._entries.append(entry)
+    client.get_host_keys()._entries.append(entry)  # noqa: SLF001
 
 def do_ssh():
     with paramiko.SSHClient() as client:

@@ -71,6 +71,5 @@ def get_updated_ssh_version():
     local_version = apt_package.version
     if local_version:
         return local_version
-    else:
-        msg = "Empty updated_ssh_version"
-        raise RuntimeError(msg)
+    msg = "Empty updated_ssh_version"
+    raise RuntimeError(msg)
