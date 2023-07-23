@@ -14,6 +14,11 @@ logging_level = logging.INFO
 
 
 class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
+    @classmethod
+    def pubk_algorithm(cls, pubk_bin):
+        m = paramiko.Message(pubk_bin)
+        return m.get_string()
+
     def auth_publickey(self, username, _key):
         # All I've got is the pubkey, without the private part,
         # so I can't use Paramiko's implementation that immediately signs.
@@ -24,13 +29,13 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
         # https://github.com/openssh/openssh-portable/blob/V_9_3_P2/sshconnect2.c#L1516
 
         # TODO
-        algorithm = "ssh-rsa"
-        pubk = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCoQ9S7V+CufAgwoehnf2TqsJ9LTsu8pUA3FgpS2mdVwcMcTs++8P5sQcXHLtDmNLpWN4k7NQgxaY1oXy5e25x/4VhXaJXWEt3luSw+Phv/PB2+aGLvqCUirsLTAD2r7ieMhd/pcVf/HlhNUQgnO1mupdbDyqZoGD/uCcJiYav8i/V7nJWJouHA8yq31XS2yqXp9m3VC7UZZHzUsVJA9Us5YqF0hKYeaGruIHR2bwoDF9ZFMss5t6/pzxMljU/ccYwvvRDdI7WX4o4+zLuZ6RWvsU6LGbbb0pQdB72tlV41fSefwFsk4JRdKbyV3Xjf25pV4IXOTcqhy+4JTB/jXxrF"
+        pubk_64 = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCoQ9S7V+CufAgwoehnf2TqsJ9LTsu8pUA3FgpS2mdVwcMcTs++8P5sQcXHLtDmNLpWN4k7NQgxaY1oXy5e25x/4VhXaJXWEt3luSw+Phv/PB2+aGLvqCUirsLTAD2r7ieMhd/pcVf/HlhNUQgnO1mupdbDyqZoGD/uCcJiYav8i/V7nJWJouHA8yq31XS2yqXp9m3VC7UZZHzUsVJA9Us5YqF0hKYeaGruIHR2bwoDF9ZFMss5t6/pzxMljU/ccYwvvRDdI7WX4o4+zLuZ6RWvsU6LGbbb0pQdB72tlV41fSefwFsk4JRdKbyV3Xjf25pV4IXOTcqhy+4JTB/jXxrF"
+        pubk_bin = b64decode(pubk_64)
 
         def finish(m: paramiko.Message):
             m.add_boolean(b=False)
-            m.add_string(algorithm)
-            m.add_string(b64decode(pubk))
+            m.add_string(self.pubk_algorithm(pubk_bin))  # This protocol looks WET...
+            m.add_string(pubk_bin)
 
         return self.send_auth_request(username, "publickey", finish)
 
