@@ -57,7 +57,7 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
 
     @log_exceptions()
     def check_auth_publickey(self, username, key):
-        self.log('pub', f'{username} {key.fingerprint}')
+        self.log('pub', f'{username} {key.get_base64()}')
         self.username_printed = True
         return paramiko.AUTH_FAILED
 
