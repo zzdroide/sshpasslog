@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import re
 from base64 import b64decode
@@ -60,12 +61,11 @@ class MyTransport(paramiko.transport.ServiceRequestingTransport):
 
 class MyAuthStrategy:
     def authenticate(self, transport):
-        try:
+        # This is expected to fail:
+        with contextlib.suppress(paramiko.AuthenticationException):
             transport.auth_publickey(username, None)########
-        except paramiko.AuthenticationException:
-            pass    # This is expected to fail
 
-        # This is expected to succeed, so no "try":
+        # This is expected to succeed:
         transport.auth_interactive_dumb(username)########
 
 
