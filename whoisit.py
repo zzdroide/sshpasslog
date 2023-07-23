@@ -1,8 +1,8 @@
 from base64 import b64decode
 import logging
+import paramiko
 import re
 
-import paramiko
 
 whoami_server = {
     'host': 'whoami.filippo.io',
@@ -12,7 +12,7 @@ whoami_server = {
 # logging_level = logging.DEBUG
 logging_level = logging.INFO
 
-
+username='user'
 class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
     def auth_publickey(self, username, key):
         # All I've got is the pubkey, without the private part,
@@ -60,12 +60,12 @@ class MyTransport(paramiko.transport.ServiceRequestingTransport):
 class MyAuthStrategy:
     def authenticate(self, transport):
         try:
-            transport.auth_publickey('user', None)
+            transport.auth_publickey(username, None)########
         except paramiko.AuthenticationException:
             pass    # This is expected to fail
 
         # This is expected to succeed, so no "try":
-        transport.auth_interactive_dumb('user')
+        transport.auth_interactive_dumb(username)########
 
 
 def setup_logger():
