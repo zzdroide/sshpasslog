@@ -48,7 +48,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
     def _parse_userauth_pk_ok(self, m):
         raise RuntimeError(
             "Server is interested in this public key,"
-            " but I can't continue because I don't have the private part."
+            " but I can't continue because I don't have the private part.",
         )
         # Idea: probe servers with keys from https://github.com/_.keys  :frog:
 
@@ -86,7 +86,7 @@ def do_ssh():
             whoami_server['host'],
             timeout=10,
             transport_factory=MyTransport,
-            auth_strategy=MyAuthStrategy()
+            auth_strategy=MyAuthStrategy(),
         )
         chan = client.get_transport().open_session(timeout=10)
         chan.settimeout(10)     # Improvement: implement a single timeout up to the "return"
