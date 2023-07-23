@@ -12,6 +12,7 @@ INITIAL_DISTRO_SSH_VERSION = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3"
 
 # Reference on versioning scheme: https://serverfault.com/questions/604541/debian-packages-version-convention/604549#604549
 
+
 class AptPackage(threading.Thread):
 
     version: str
@@ -67,6 +68,7 @@ class AptPackage(threading.Thread):
 
 
 apt_package = AptPackage()  # Singleton
+
 
 def get_updated_ssh_version():
     # Thread-safe read

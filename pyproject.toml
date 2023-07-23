@@ -17,6 +17,7 @@ apt-repo = "^0.5"
 types-paramiko = "==3.2.0.0"
 types-requests = "^2.31.0.1"
 ruff = "^0.0.280"
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]

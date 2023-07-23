@@ -47,7 +47,8 @@ class Country(threading.Thread):
         logger.info(f"Updated tor_ips with {len(self.tor_ips)} IPs")
 
 
-country = Country() # Singleton
+country = Country()     # Singleton
+
 
 def ip2country(ip: str):
     return country.ip2country(ip)

@@ -24,10 +24,10 @@ CREATE TABLE IF NOT EXISTS sshpasslog (
 INSERT_QUERY = """
 INSERT INTO sshpasslog (user, pass, last_ip, last_country) VALUES (?, ?, ?, ?)
 ON CONFLICT (user, pass) DO UPDATE SET
-	count = count + 1,
-	last_at = CURRENT_TIMESTAMP,
-	last_ip = excluded.last_ip,
-	last_country = excluded.last_country;
+    count = count + 1,
+    last_at = CURRENT_TIMESTAMP,
+    last_ip = excluded.last_ip,
+    last_country = excluded.last_country;
 """
 
 con = sqlite3.connect(

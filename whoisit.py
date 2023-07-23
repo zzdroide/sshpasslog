@@ -12,7 +12,7 @@ whoami_server = {
 
 logging_level = logging.INFO
 
-username="user"
+
 class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
     def auth_publickey(self, username, _key):
         # All I've got is the pubkey, without the private part,
@@ -60,12 +60,14 @@ class MyTransport(paramiko.transport.ServiceRequestingTransport):
 
 class MyAuthStrategy:
     def authenticate(self, transport):
+        username = "user"
+
         # This is expected to fail:
         with contextlib.suppress(paramiko.AuthenticationException):
-            transport.auth_publickey(username, None)########
+            transport.auth_publickey(username, None)
 
         # This is expected to succeed:
-        transport.auth_interactive_dumb(username)########
+        transport.auth_interactive_dumb(username)
 
 
 def setup_logger():
@@ -74,9 +76,11 @@ def setup_logger():
         level=logging_level,
     )
 
+
 def add_host_key_entry(client):
     entry = paramiko.hostkeys.HostKeyEntry.from_line(whoami_server["key"])
     client.get_host_keys()._entries.append(entry)  # noqa: SLF001
+
 
 def do_ssh():
     with paramiko.SSHClient() as client:
@@ -93,6 +97,7 @@ def do_ssh():
         response_data = chan.makefile().read()
         return response_data.decode("utf-8")
 
+
 def get_github(res):
     no_match_pat = re.compile(r"but\W+got\W+no\W+match")
     if no_match_pat.search(res):
@@ -108,6 +113,7 @@ def get_github(res):
     logging.warning(f"Undecided response:\n{res}")
     msg = "Could not decide if response was a match or not"
     raise ValueError(msg)
+
 
 setup_logger()
 res = do_ssh()
