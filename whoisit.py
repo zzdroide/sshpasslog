@@ -15,7 +15,7 @@ logging_level = logging.INFO
 
 username="user"
 class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
-    def auth_publickey(self, username, key):
+    def auth_publickey(self, username, _key):
         # All I've got is the pubkey, without the private part,
         # so I can't use Paramiko's implementation that immediately signs.
         #
@@ -45,7 +45,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
             return self._parse_userauth_pk_ok(m)
         return super()._parse_userauth_info_request(m)
 
-    def _parse_userauth_pk_ok(self, m):
+    def _parse_userauth_pk_ok(self, _m):
         msg = (
             "Server is interested in this public key,"
             " but I can't continue because I don't have the private part."
