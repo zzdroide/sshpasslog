@@ -3,7 +3,7 @@ import time
 import traceback
 
 import requests
-from ip3country import CountryLookup  # type: ignore
+from ip3country import CountryLookup
 
 from src.log import logger
 

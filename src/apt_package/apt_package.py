@@ -3,7 +3,7 @@ import threading
 import time
 import traceback
 
-from apt_repo import APTRepository  # type: ignore
+from apt_repo import APTRepository
 
 from src.log import logger
 
