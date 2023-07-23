@@ -30,9 +30,7 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
         return ("\n  ಠ_ಠ\n\n", "en-US")
 
     def on_got_username(self, username: str):
-        """
-        This makes possible to print the bare username before a password is sent.
-        """
+        """This makes possible to print the bare username before a password is sent."""
         if not self.username_printed:
             self.log('user', username)
             self.username_printed = True

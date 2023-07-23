@@ -1,8 +1,8 @@
-"""
-DB is optimized for quick inserts and simplicity.
+"""DB is optimized for quick inserts and simplicity.
+
 - No indices
 - Not optimized for size (text timestamps, text IPs)
-- This program only INSERTs
+- This program only INSERTs.
 """
 
 import sqlite3

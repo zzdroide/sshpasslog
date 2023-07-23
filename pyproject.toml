@@ -23,5 +23,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-select = ["F", "E", "W", "C90", "I"]
-ignore = ["E501"]
+select = ["F", "E", "W", "C90", "I", "N", "D"]
+ignore = ["E501", "D10", "D401", "D404"]
