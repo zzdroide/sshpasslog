@@ -46,10 +46,11 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
             return super()._parse_userauth_info_request(m)
 
     def _parse_userauth_pk_ok(self, m):
-        raise RuntimeError(
+        msg = (
             "Server is interested in this public key,"
-            " but I can't continue because I don't have the private part.",
+            " but I can't continue because I don't have the private part."
         )
+        raise RuntimeError(msg)
         # Idea: probe servers with keys from https://github.com/_.keys  :frog:
 
 
@@ -107,7 +108,8 @@ def get_github(res):
         }
 
     logging.warning(f'Undecided response:\n{res}')
-    raise ValueError('Could not decide if response was a match or not')
+    msg = 'Could not decide if response was a match or not'
+    raise ValueError(msg)
 
 setup_logger()
 res = do_ssh()

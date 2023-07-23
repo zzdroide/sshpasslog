@@ -57,7 +57,8 @@ class AptPackage(threading.Thread):
         except Exception as e:
             # Probably a network error,
             # but the apt_repo package instead of rasing just returns None somewhere.
-            raise RuntimeError("Failed to obtain version, can't start ssh server without it.") from e
+            msg = "Failed to obtain version, can't start ssh server without it."
+            raise RuntimeError(msg) from e
             # This is the main thread so the whole program will crash.
             # docker-compose will restart the container and retry first very quickly,
             # and then every 1min.
@@ -71,4 +72,5 @@ def get_updated_ssh_version():
     if local_version:
         return local_version
     else:
-        raise RuntimeError('Empty updated_ssh_version')
+        msg = 'Empty updated_ssh_version'
+        raise RuntimeError(msg)

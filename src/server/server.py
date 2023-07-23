@@ -61,7 +61,8 @@ class MyServer(paramiko.ServerInterface, LoggingMixin):
     @log_exceptions()
     def check_channel_request(self, kind, chanid):
         # Client can't open a channel without authenticating
-        raise AssertionError("never reached")
+        msg = 'never reached'
+        raise AssertionError(msg)
 
 
 class MyTransport(paramiko.Transport):
