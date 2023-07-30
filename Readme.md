@@ -10,3 +10,5 @@ ssh -p2222 -v -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null -o StrictHos
 
 
 designed for ipv4 only
+
+To obtain github users from pubkeys, in each interesting row set github_user to `.` , and run `python -m src.get_githubs`

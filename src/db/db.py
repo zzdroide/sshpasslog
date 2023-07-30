@@ -3,7 +3,6 @@ DB is optimized for quick inserts and simplicity.
 
 - No indices
 - Not optimized for size (text timestamps, text IPs)
-- This program only INSERTs.
 """
 
 import sqlite3
@@ -24,6 +23,8 @@ CREATE TABLE IF NOT EXISTS pass (
 """ -- # noqa: E128
 CREATE TABLE IF NOT EXISTS pubk (
     pubk TEXT PRIMARY KEY NOT NULL,
+    github_user TEXT DEFAULT NULL,
+    github_name TEXT DEFAULT NULL,
     count INTEGER NOT NULL DEFAULT 1,
     first_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -50,6 +51,14 @@ ON CONFLICT (pubk) DO UPDATE SET
     last_user = excluded.last_user,
     last_ip = excluded.last_ip,
     last_country = excluded.last_country;
+"""
+
+GET_PUBK_TO_OBTAIN_GITHUB = """
+SELECT pubk FROM pubk WHERE github_user = '.';
+"""
+
+SET_GITHUB_TO_PUBK = """
+UPDATE pubk SET github_user = ?, github_name = ? WHERE pubk = ?;
 """
 
 con = sqlite3.connect(
@@ -81,3 +90,16 @@ def record_pass(user: str, password: str, ip: str, country: str):
 
 def record_pubk(user: str, pubk: str, ip: str, country: str):
     execute_graceful(INSERT_PUBK_QUERY, (pubk, user, ip, country))
+
+
+def github_pubkeys_to_obtain():
+    tuples = con.execute(GET_PUBK_TO_OBTAIN_GITHUB).fetchall()
+    return (t[0] for t in tuples)
+
+
+def set_github_to_pubk(pubk: str, *, github_user: str, github_name: str | None):
+    cur = con.execute(SET_GITHUB_TO_PUBK, (github_user, github_name, pubk))
+
+    if cur.rowcount != 1:
+        msg = f"Update to pubk modified {cur.rowcount} rows: {pubk}"
+        raise RuntimeError(msg)

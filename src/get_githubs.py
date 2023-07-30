@@ -2,8 +2,11 @@ import contextlib
 import logging
 import re
 from base64 import b64decode
+from dataclasses import dataclass
 
 import paramiko
+
+from src import db
 
 whoami_server = {
     "host": "whoami.filippo.io",
@@ -19,7 +22,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
         m = paramiko.Message(pubk_bin)
         return m.get_string()
 
-    def auth_publickey(self, username, _key):
+    def auth_publickey(self, username, pubk64):
         # All I've got is the pubkey, without the private part,
         # so I can't use Paramiko's implementation that immediately signs.
         #
@@ -28,9 +31,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
         # and
         # https://github.com/openssh/openssh-portable/blob/V_9_3_P2/sshconnect2.c#L1516
 
-        # TODO
-        pubk_64 = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCoQ9S7V+CufAgwoehnf2TqsJ9LTsu8pUA3FgpS2mdVwcMcTs++8P5sQcXHLtDmNLpWN4k7NQgxaY1oXy5e25x/4VhXaJXWEt3luSw+Phv/PB2+aGLvqCUirsLTAD2r7ieMhd/pcVf/HlhNUQgnO1mupdbDyqZoGD/uCcJiYav8i/V7nJWJouHA8yq31XS2yqXp9m3VC7UZZHzUsVJA9Us5YqF0hKYeaGruIHR2bwoDF9ZFMss5t6/pzxMljU/ccYwvvRDdI7WX4o4+zLuZ6RWvsU6LGbbb0pQdB72tlV41fSefwFsk4JRdKbyV3Xjf25pV4IXOTcqhy+4JTB/jXxrF"
-        pubk_bin = b64decode(pubk_64)
+        pubk_bin = b64decode(pubk64)
 
         def finish(m: paramiko.Message):
             m.add_boolean(b=False)
@@ -63,13 +64,16 @@ class MyTransport(paramiko.transport.ServiceRequestingTransport):
         return MyAuthHandler(self)
 
 
+@dataclass
 class MyAuthStrategy:
+    pubk64: str
+
     def authenticate(self, transport):
         username = "user"
 
         # This is expected to fail:
         with contextlib.suppress(paramiko.AuthenticationException):
-            transport.auth_publickey(username, None)
+            transport.auth_publickey(username, self.pubk64)
 
         # This is expected to succeed:
         transport.auth_interactive_dumb(username)
@@ -87,14 +91,14 @@ def add_host_key_entry(client):
     client.get_host_keys()._entries.append(entry)  # noqa: SLF001
 
 
-def do_ssh():
+def do_ssh(pubk64: str):
     with paramiko.SSHClient() as client:
         add_host_key_entry(client)
         client.connect(
             whoami_server["host"],
             timeout=10,
             transport_factory=MyTransport,
-            auth_strategy=MyAuthStrategy(),
+            auth_strategy=MyAuthStrategy(pubk64),
         )
         chan = client.get_transport().open_session(timeout=10)
         chan.settimeout(10)     # Improvement: implement a single timeout up to the "return"
@@ -103,7 +107,7 @@ def do_ssh():
         return response_data.decode("utf-8")
 
 
-def get_github(res):
+def parse_github(res):
     no_match_pat = re.compile(r"but\W+got\W+no\W+match")
     if no_match_pat.search(res):
         return None
@@ -121,5 +125,11 @@ def get_github(res):
 
 
 setup_logger()
-res = do_ssh()
-print(get_github(res))  # noqa: T201
+
+for pubk64 in db.github_pubkeys_to_obtain():
+    res = do_ssh(pubk64)
+    github = parse_github(res)
+    if github:
+        db.set_github_to_pubk(pubk64, github_user=github["user"], github_name=github["name"])
+    else:
+        db.set_github_to_pubk(pubk64, github_user="?", github_name=None)
