@@ -1,3 +1,3 @@
-from .db import record_pass
+from .db import record_pass, record_pubk
 
-__all__ = ["record_pass"]
+__all__ = ["record_pass", "record_pubk"]
