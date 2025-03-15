@@ -119,6 +119,21 @@ ORDER BY count DESC;
 - `./init.sh`
 - `docker compose up -d --build`
 
+### Docker's default logging
+
+If the server is exposed to the internet at a public IPv4, on a common port like 22 or 2222, it will log **a lot**.
+
+Print logs disk usage:
+```sh
+$ sudo du -h $(docker inspect --format='{{.LogPath}}' $(docker compose ps -q))
+2.8G	/var/lib/docker/containers/a0f4…12-json.log
+```
+Manually clear logs:
+```sh
+docker compose up -d --force-recreate
+```
+To prevent any container from filling your disk with logs again, change the unbounded defaults. See the example [here](https://docs.docker.com/engine/logging/drivers/json-file/#usage) and don't miss this line: _Restart Docker for the changes to take effect for newly created containers. Existing containers don't use the new logging configuration automatically._
+
 ## Developing
 
 - Python3.11 and Poetry are assumed to be installed
