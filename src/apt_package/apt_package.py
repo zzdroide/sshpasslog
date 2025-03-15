@@ -57,7 +57,7 @@ class AptPackage(threading.Thread):
             debian_revision: str = package.version.split("-")[-1]
         except Exception as e:
             # Probably a network error,
-            # but the apt_repo package instead of rasing just returns None somewhere.
+            # but the apt_repo package instead of raising just returns None somewhere.
             msg = "Failed to obtain version, can't start ssh server without it."
             raise RuntimeError(msg) from e
             # This is the main thread so the whole program will crash.
