@@ -56,7 +56,7 @@ class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
             " but I can't continue because I don't have the private part."
         )
         raise RuntimeError(msg)
-        # Idea: probe servers with keys from https://github.com/_.keys  :frog:
+        # Idea: probe servers with keys from https://github.com/_.keys  🐸
 
 
 class MyTransport(paramiko.transport.ServiceRequestingTransport):

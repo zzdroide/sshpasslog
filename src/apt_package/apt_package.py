@@ -34,6 +34,7 @@ class AptPackage(threading.Thread):
         self.version = self.get_updated_version()
         # This is the only method that writes to self.version,
         # so reads should be thread-safe.
+
         logger.info(f"Updated apt_package.version to {self.version}")
 
     def get_updated_version(self):
@@ -60,7 +61,7 @@ class AptPackage(threading.Thread):
             # but the apt_repo package instead of raising just returns None somewhere.
             msg = "Failed to obtain version, can't start ssh server without it."
             raise RuntimeError(msg) from e
-            # This is the main thread so the whole program will crash.
+            # On startup, this is the main thread so the whole program will crash.
             # docker-compose will restart the container and retry first very quickly,
             # and then every 1min.
         else:

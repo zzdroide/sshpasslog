@@ -82,7 +82,7 @@ class MyTransport(paramiko.Transport):
         # Cache:
         if MyTransport.server_keys is None:
             # Load them, once. Paramiko's idea was to execute this on every new request??
-            # (On multiple simultaneous first connections, for example by running "ssh-keyscan -p2222 localhost",
+            # (Note: on multiple simultaneous first connections, for example by running "ssh-keyscan -p2222 localhost",
             # this will run more than once. But who cares.)
             base_dir = Path("host_keys/etc/ssh/")
             keys = (
