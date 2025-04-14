@@ -62,7 +62,7 @@ UPDATE pubk SET github_user = ?, github_name = ? WHERE pubk = ?;
 """
 
 con = sqlite3.connect(
-    "./db/sshpassslog.sqlite3",
+    "./db/sshpasslog.sqlite3",
     check_same_thread=False,
     # autocommit=True,      future, python3.12
     isolation_level=None,
