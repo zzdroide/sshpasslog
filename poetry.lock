@@ -297,13 +297,14 @@ files = [
 
 [[package]]
 name = "ip3country"
-version = "0.2.0"
+version = "0.3.0"
 description = "A zero-dependency, local, fast, tiny ip-address to country lookup"
 optional = false
 python-versions = ">=2.0"
 groups = ["main"]
 files = [
-    {file = "ip3country-0.2.0.tar.gz", hash = "sha256:36bda305556e1cd0a687f2c3859886f84d37da2f9450dc2d6bcc39837b754776"},
+    {file = "ip3country-0.3.0-py3-none-any.whl", hash = "sha256:311894ff713b18729b1aa3c267f0227187c69ef3a2cfc890d7f9200ac49f02c0"},
+    {file = "ip3country-0.3.0.tar.gz", hash = "sha256:0999982eb5eae5c6177213ff7942dd35bc27438d627fc1689799a40c623fceda"},
 ]
 
 [[package]]
@@ -515,4 +516,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.11"
-content-hash = "a2e57807bba5769e8182d6d7987c3e65d3fed47f937d7148f797f11010ac8024"
+content-hash = "7e38b25e676e81385710ffe9f419944386f96c4261ad74fdfb87bf8e8e0bb751"

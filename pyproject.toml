@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.11"
 paramiko = "==3.2.0"
-ip3country = "^0.2.0"
+ip3country = "^0.3.0"
 requests = "^2.31.0"
 apt-repo = "^0.5"
 
