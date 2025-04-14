@@ -3,6 +3,5 @@ __pycache__/
 
 .env
 *.log
-
+*.sqlite3
 /host_keys/
-/db/*.sqlite3

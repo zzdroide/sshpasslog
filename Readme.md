@@ -20,7 +20,7 @@ So I rolled up my own and added some features. It was fun 😄
 
 <!--
 These tables are generated with:
-sqlite3 -markdown db/sshpasslog.sqlite3 "SELECT * FROM pass ORDER BY count DESC LIMIT 5;"
+sqlite3 -markdown sshpasslog.sqlite3 "SELECT * FROM pass ORDER BY count DESC LIMIT 5;"
 -->
 
 - The most attempted combos:
@@ -87,14 +87,14 @@ Public keys that attempted to authenticate can be traced back to Github users wi
 
 Count unconsulted pubkeys:
 ```sh
-sqlite3 db/sshpasslog.sqlite3 "SELECT COUNT(*) FROM pubk WHERE github_user IS NULL;"
+sqlite3 sshpasslog.sqlite3 "SELECT COUNT(*) FROM pubk WHERE github_user IS NULL;"
 ```
 
 Request all unconsulted pubkeys:
 ```sh
 # Before doing this, run the "Count" query above and decide if you want to make this many requests to whoami.filippo.io xd
 
-sqlite3 db/sshpasslog.sqlite3 "UPDATE pubk SET github_user = '.' WHERE github_user IS NULL;"
+sqlite3 sshpasslog.sqlite3 "UPDATE pubk SET github_user = '.' WHERE github_user IS NULL;"
 docker compose exec sshpasslog python -m src.get_githubs
 ```
 

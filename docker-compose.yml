@@ -13,5 +13,5 @@ services:
     volumes:
       - ./src/:/app/src/:ro
       - ./host_keys/:/app/host_keys/:ro
-      - ./db/:/app/db/:rw
+      - ./sshpasslog.sqlite3:/app/sshpasslog.sqlite3:rw
       - ./sshpasslog.log:/app/sshpasslog.log:rw
