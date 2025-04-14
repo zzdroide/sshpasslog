@@ -12,7 +12,7 @@ So I rolled up my own and added some features. It was fun 😄
 - Records the country from which the login was attempted (or "XT" if it came from Tor)
 - Records public key attempts too, and finds out if they match a public key in Github
 - Logs all client attempts in real time
-- Masks ssh version as an up-to-date Ubuntu
+- Masks ssh version as a default non-hardened (`DebianBanner=yes`) up-to-date Ubuntu
 
 // TODO: asciinema
 

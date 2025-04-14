@@ -7,8 +7,8 @@ from apt_repo import APTRepository
 
 from src.log import logger
 
-UBUNTU_DISTRO = "focal"
-INITIAL_DISTRO_SSH_VERSION = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3"
+UBUNTU_DISTRO = "noble"
+INITIAL_DISTRO_SSH_VERSION = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-4ubuntu0.3"
 
 
 class AptPackage(threading.Thread):
