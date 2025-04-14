@@ -1,7 +1,6 @@
-version: '3.8'
-
 services:
-  app:
+  sshpasslog:
+    container_name: sshpasslog
     build:
       context: .
       target: app
@@ -12,6 +11,6 @@ services:
     restart: unless-stopped
     network_mode: host  # Otherwise client_ip is 172.x.x.x
     volumes:
-      - ./src/:/app/src/
-      - ./host_keys/:/app/host_keys/
-      - ./db/:/app/db/
+      - ./src/:/app/src/:ro
+      - ./host_keys/:/app/host_keys/:ro
+      - ./db/:/app/db/:rw
