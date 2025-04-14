@@ -10,8 +10,6 @@ from src.log import logger
 UBUNTU_DISTRO = "focal"
 INITIAL_DISTRO_SSH_VERSION = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3"
 
-# Reference on versioning scheme: https://serverfault.com/questions/604541/debian-packages-version-convention/604549#604549
-
 
 class AptPackage(threading.Thread):
 
@@ -38,6 +36,7 @@ class AptPackage(threading.Thread):
         logger.info(f"Updated apt_package.version to {self.version}")
 
     def get_updated_version(self):
+        # Reference on versioning scheme: https://man.archlinux.org/man/deb-version.7#debian-revision
         base_version_components = INITIAL_DISTRO_SSH_VERSION.split("-")[:-1]
         version_components = (*base_version_components, self.get_updated_revision())
         return "-".join(version_components)
