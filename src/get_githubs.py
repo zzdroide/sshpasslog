@@ -13,7 +13,10 @@ whoami_server = {
     "key": "whoami.filippo.io ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYBzfSibeNCydOnOYXdIBB9e3F1guVbwnbQQ9BdtkmH",
 }
 
-logging_level = logging.INFO
+logging.basicConfig(
+    format="%(levelname)s:%(name)s\t%(message)s",
+    level=logging.INFO,
+)
 
 
 class MyAuthHandler(paramiko.auth_handler.AuthOnlyHandler):
@@ -79,13 +82,6 @@ class MyAuthStrategy:
         transport.auth_interactive_dumb(username)
 
 
-def setup_logger():
-    logging.basicConfig(
-        format="%(levelname)s:%(name)s\t%(message)s",
-        level=logging_level,
-    )
-
-
 def add_host_key_entry(client):
     entry = paramiko.hostkeys.HostKeyEntry.from_line(whoami_server["key"])
     client.get_host_keys()._entries.append(entry)  # noqa: SLF001
@@ -124,12 +120,24 @@ def parse_github(res):
     raise ValueError(msg)
 
 
-setup_logger()
+def substring_pubk(pubk64: str):
+    ed25519_len = 68
+    if len(pubk64) <= ed25519_len:
+        return pubk64
+    mid1 = ed25519_len // 2
+    mid2 = len(pubk64) - mid1
+    return pubk64[:mid1] + "..." + pubk64[mid2:]
 
-for pubk64 in db.github_pubkeys_to_obtain():
-    res = do_ssh(pubk64)
-    github = parse_github(res)
-    if github:
-        db.set_github_to_pubk(pubk64, github_user=github["user"], github_name=github["name"])
-    else:
-        db.set_github_to_pubk(pubk64, github_user="?", github_name=None)
+
+if __name__ == "__main__":
+    for pubk64 in db.github_pubkeys_to_obtain():
+        logging.info(f"Querying {substring_pubk(pubk64)}")
+        res = do_ssh(pubk64)
+        github = parse_github(res)
+        if github:
+            db.set_github_to_pubk(pubk64, github_user=github["user"], github_name=github["name"])
+            logging.info(f"Matched {github['user']} ({github['name']})")
+        else:
+            db.set_github_to_pubk(pubk64, github_user="?", github_name=None)
+            logging.info("No match")
+        logging.info("")

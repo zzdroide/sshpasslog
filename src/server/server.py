@@ -134,7 +134,6 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
         self.log_access("disc")
 
 
-
 class MyTcpServer(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
 
