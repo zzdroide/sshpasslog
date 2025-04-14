@@ -14,3 +14,4 @@ services:
       - ./src/:/app/src/:ro
       - ./host_keys/:/app/host_keys/:ro
       - ./db/:/app/db/:rw
+      - ./sshpasslog.log:/app/sshpasslog.log:rw

@@ -5,7 +5,7 @@ import traceback
 import requests
 from ip3country import CountryLookup
 
-from src.log import logger
+from src.log import status_logger
 
 
 class Country(threading.Thread):
@@ -44,7 +44,7 @@ class Country(threading.Thread):
         self.tor_ips = frozenset(r.text.strip().split("\n"))
         # This is the only method that writes to self.tor_ips,
         # so reads should be thread-safe.
-        logger.info(f"Updated tor_ips with {len(self.tor_ips)} IPs")
+        status_logger.info(f"Updated tor_ips with {len(self.tor_ips)} IPs")
 
 
 country = Country()     # Singleton

@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 
 .env
+*.log
 
 /host_keys/
 /db/*.sqlite3

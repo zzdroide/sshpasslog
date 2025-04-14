@@ -5,7 +5,7 @@ import traceback
 
 from apt_repo import APTRepository
 
-from src.log import logger
+from src.log import status_logger
 
 UBUNTU_DISTRO = "noble"
 INITIAL_DISTRO_SSH_VERSION = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-4ubuntu0.3"
@@ -33,7 +33,7 @@ class AptPackage(threading.Thread):
         # This is the only method that writes to self.version,
         # so reads should be thread-safe.
 
-        logger.info(f"Updated apt_package.version to {self.version}")
+        status_logger.info(f"Updated apt_package.version to {self.version}")
 
     def get_updated_version(self):
         # Reference on versioning scheme: https://man.archlinux.org/man/deb-version.7#debian-revision

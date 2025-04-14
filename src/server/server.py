@@ -7,7 +7,7 @@ import paramiko
 
 from src import apt_package, db
 from src.country import ip2country
-from src.log import LoggingMixin, log_exceptions, logger
+from src.log import LoggingMixin, log_exceptions, status_logger
 
 VERSION_STR_PREFIX_LEN = len("SSH-2.0-")
 
@@ -31,7 +31,7 @@ class MySshServer(paramiko.ServerInterface, LoggingMixin):
     def on_got_username(self, username: str):
         """This makes possible to print the bare username before a password is sent."""
         if not self.username_printed:
-            self.log("user", username)
+            self.log_access("user", username)
             self.username_printed = True
 
     @log_exceptions()
@@ -46,7 +46,7 @@ class MySshServer(paramiko.ServerInterface, LoggingMixin):
 
     @log_exceptions()
     def check_auth_password(self, username, password):
-        self.log("pass", f"{username}:{password}")
+        self.log_access("pass", f"{username}:{password}")
         self.username_printed = True
         db.record_pass(username, password, self.client_ip_addr, self.client_ip_country)
         return paramiko.AUTH_FAILED
@@ -54,7 +54,7 @@ class MySshServer(paramiko.ServerInterface, LoggingMixin):
     @log_exceptions()
     def check_auth_publickey(self, username, key):
         pubk64 = key.get_base64()
-        self.log("pub", f"{username} {pubk64}")
+        self.log_access("pub", f"{username} {pubk64}")
         self.username_printed = True
         db.record_pubk(username, pubk64, self.client_ip_addr, self.client_ip_country)
         return paramiko.AUTH_FAILED
@@ -110,7 +110,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
     def setup(self):
         self.client_ip_addr = self.client_address[0]
         self.client_ip_country = ip2country(self.client_ip_addr)
-        self.log("conn")
+        self.log_access("conn")
         self.ssh_server = MySshServer(self)
         self.transport = MyTransport(self.request)
 
@@ -122,7 +122,7 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
             if self.transport.remote_version:
                 client_ver = self.transport.remote_version[VERSION_STR_PREFIX_LEN:]
-                self.log("cli", client_ver)
+                self.log_access("cli", client_ver)
 
             self.transport.join(ReqHandler.AUTH_TIMEOUT)
 
@@ -131,7 +131,8 @@ class ReqHandler(socketserver.BaseRequestHandler, LoggingMixin):
 
     def finish(self):
         self.transport.close()
-        self.log("disc")
+        self.log_access("disc")
+
 
 
 class MyTcpServer(socketserver.ThreadingTCPServer):
@@ -143,5 +144,5 @@ PORT = 2222
 
 def run():
     with MyTcpServer(("0.0.0.0", PORT), ReqHandler) as server:  # noqa: S104
-        logger.info(f"Listening on port {PORT}")
+        status_logger.info(f"Listening on port {PORT}")
         server.serve_forever()
