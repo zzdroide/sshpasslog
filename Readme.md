@@ -81,6 +81,24 @@ sqlite3 -markdown sshpasslog.sqlite3 "SELECT * FROM pass ORDER BY count DESC LIM
   | admin    | napoleon | 5     | 2024-12-23 11:17:49 | 2025-03-08 04:27:50 | 92.255.85.37   | RU           |
   | user     | napoleon | 5     | 2025-01-12 06:42:50 | 2025-03-13 11:40:40 | 80.64.30.77    | RU           |
 
+- Search for passwords attemped with existing usernames:
+  ```sql
+  SELECT *
+  FROM pass
+  WHERE user = 'alice' OR user = 'bob'
+  ORDER BY user ASC, count DESC;
+  ```
+  | user  |    pass     | count |      first_at       |       last_at       |     last_ip     | last_country |
+  |-------|-------------|-------|---------------------|---------------------|-----------------|--------------|
+  | alice | alice       | 94    | 2023-08-06 20:11:43 | 2025-04-01 18:36:25 | 150.5.156.34    | JP           |
+  | alice | alice123    | 63    | 2023-08-17 05:47:09 | 2025-02-11 18:06:58 | 103.63.25.141   | --           |
+  | alice | 123456      | 49    | 2023-08-19 01:08:05 | 2025-02-09 08:34:07 | 46.8.233.108    | RU           |
+  | … | … | … | … | … | … | … |
+  | bob   | bob         | 167   | 2023-07-22 03:24:16 | 2025-02-09 05:12:04 | 46.8.233.108    | RU           |
+  | bob   | 12345       | 35    | 2023-09-26 16:02:54 | 2024-11-07 10:52:43 | 189.4.149.211   | BR           |
+  | bob   | password    | 33    | 2023-08-13 16:03:02 | 2024-12-06 16:58:01 | 20.87.21.241    | US           |
+  | … | … | … | … | … | … | … |
+
 ### Github users from pubkeys
 
 Public keys that attempted to authenticate can be traced back to Github users with [whoami.filippo.io](https://whoami.filippo.io)
