@@ -10,7 +10,7 @@ So I rolled up my own and added some features. It was fun 😄
 
 - Records some statistics about user/pass combinations, instead of just the combinations, or absolutely all the attempts (right now my DB has 400K rows, but `SUM(count)` is 9M)
 - Records the country from which the login was attempted (or "XT" if it came from Tor)
-- Records public key attempts too, and finds out if they match a public key in Github
+- Records public key attempts too, and finds out if they match a public key in GitHub
 - Logs all client attempts in real time
 - Masks ssh version as a default non-hardened (`DebianBanner=yes`) up-to-date Ubuntu
 
@@ -99,9 +99,9 @@ sqlite3 -markdown sshpasslog.sqlite3 "SELECT * FROM pass ORDER BY count DESC LIM
   | bob   | password    | 33    | 2023-08-13 16:03:02 | 2024-12-06 16:58:01 | 20.87.21.241    | US           |
   | … | … | … | … | … | … | … |
 
-### Github users from pubkeys
+### GitHub users from pubkeys
 
-Public keys that attempted to authenticate can be traced back to Github users with [whoami.filippo.io](https://whoami.filippo.io)
+Public keys that attempted to authenticate can be traced back to GitHub users with [whoami.filippo.io](https://whoami.filippo.io)
 
 Count unconsulted pubkeys:
 ```sh
