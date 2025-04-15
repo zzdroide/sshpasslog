@@ -7,3 +7,5 @@ echo "HOST_GID=$(id -g)" >>.env
 
 mkdir -p host_keys/etc/ssh/
 ssh-keygen -A -f host_keys
+
+touch sshpasslog.sqlite3 sshpasslog.log
