@@ -161,5 +161,6 @@ ssh -p2222 -v \
 
 - Handles IPv4 only
 
-
-// TODO: https://www.sqlite.org/useovernet.html  https://stackoverflow.com/questions/51221730/markdown-link-to-header
+- SQLite access should occur locally and [not over network](https://sqlite.org/useovernet.html)
+  - Running queries directly on the server is OK
+  - Running queries on a DB mounted over a network filesystem is _not_ OK. Work on a local copy of the DB instead.
