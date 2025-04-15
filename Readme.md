@@ -14,7 +14,7 @@ So I rolled up my own and added some features. It was fun 😄
 - Logs all client attempts in real time
 - Masks ssh version as a default non-hardened (`DebianBanner=yes`) up-to-date Ubuntu
 
-// TODO: asciinema
+[![asciicast](https://asciinema.org/a/715749.svg)](https://asciinema.org/a/715749?autoplay=1)
 
 ### DB queries and examples
 
