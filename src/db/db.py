@@ -1,7 +1,7 @@
 """
 DB is optimized for quick inserts and simplicity.
 
-- No indices
+- No extra indices (other than primary keys)
 - Not optimized for size (text timestamps, text IPs)
 """
 
