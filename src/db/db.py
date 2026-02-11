@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS pass (
     PRIMARY KEY (user, pass)
 );
 """,
-""" -- # noqa: E128
+"""
 CREATE TABLE IF NOT EXISTS pubk (
     pubk TEXT PRIMARY KEY NOT NULL,
     github_user TEXT DEFAULT NULL,
